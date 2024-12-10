@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <title>BlueTube - Flag3</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-button" onclick="window.location = '/index.html';">
+            <h1 class="nav-text" style="font-size: 20pt;">BlueTube</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag1.html';">
+            <h1 class="nav-text">Flag1</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag2.html';">
+            <h1 class="nav-text">Flag2</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag3.html';">
+            <h1 class="nav-text">Flag3</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag4.html';">
+            <h1 class="nav-text">Flag4</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag5.html';">
+            <h1 class="nav-text">Flag5</h1>
+        </div>
+    </nav>
+
+    <video id="videoPlayer" width="960" height="540" preload="auto" onclick="PlayPause()">
+        <source id="videoSource" type="video/mp4">
+    </video>
+</body>
+
+<script>
+    // Code designed to block right click so you can't get to the dev tools ;)
+    document.addEventListener("DOMContentLoaded", async () => {
+        document.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+        });
+    });
+
+    // Plays/pauses the video when you click
+    let isPaused = false;
+    async function PlayPause() {
+        const videoPlayer = document.querySelector("#videoPlayer");
+        if (videoPlayer.paused) {
+            isPaused = false;
+            videoPlayer.play();
+            return;
+        }
+        isPaused = !isPaused;
+        if (isPaused) {
+            videoPlayer.playbackRate = 0;
+            videoPlayer.muted = true;
+        } else {
+            videoPlayer.playbackRate = 1;
+            videoPlayer.muted = false;
+        }
+    }
+
+    // Restarts the video when it ends so the video loops
+    document.addEventListener("DOMContentLoaded", async () => {
+        const videoPlayer = document.querySelector("#videoPlayer");
+        videoPlayer.addEventListener("ended", () => {
+            videoPlayer.currentTime = 0;
+            videoPlayer.play();
+        });
+    });
+</script>
+
+<script>
+    async function GetToken() {
+        const response = await fetch("/gettoken");
+        const responseJson = await response.json();
+        return responseJson.token;
+    }
+</script>
+
+</html>
+
+<!--
+    This is the ghost of a script tag which deleted itself
+    but while it was still here it downloaded the video.
+    I bet you could still find the video URL if you knew where
+    to look... :0
+-->
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const videoPlayer = document.querySelector("#videoPlayer");
+        const videoSource = document.querySelector("#videoSource");
+        const videoUrl = "/3-3646bb40-6fc4-4cbb-866b-95103af40186.mp4";
+        const token = await GetToken();
+        const response = await fetch(`${videoUrl}?token=${token}`);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        videoSource.src = blobUrl;
+        videoPlayer.load();
+        videoPlayer.onloadeddata = () => {
+            URL.revokeObjectURL(blobUrl);
+        };
+    });
+    document.currentScript.remove();
+</script>

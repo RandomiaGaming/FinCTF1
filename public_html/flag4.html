@@ -1,0 +1,120 @@
+<html>
+
+<head>
+    <title>BlueTube - Flag4</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-button" onclick="window.location = '/index.html';">
+            <h1 class="nav-text" style="font-size: 20pt;">BlueTube</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag1.html';">
+            <h1 class="nav-text">Flag1</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag2.html';">
+            <h1 class="nav-text">Flag2</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag3.html';">
+            <h1 class="nav-text">Flag3</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag4.html';">
+            <h1 class="nav-text">Flag4</h1>
+        </div>
+        <div class="nav-button" onclick="window.location = '/flag5.html';">
+            <h1 class="nav-text">Flag5</h1>
+        </div>
+    </nav>
+
+    <video id="videoPlayer" width="960" height="540" preload="auto" onclick="PlayPause()">
+        <source id="videoSource" type="video/mp4">
+    </video>
+</body>
+
+<script>
+    // Code designed to block right click so you can't get to the dev tools ;)
+    document.addEventListener("DOMContentLoaded", async () => {
+        document.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+        });
+    });
+
+    // Plays/pauses the video when you click
+    let isPaused = false;
+    async function PlayPause() {
+        const videoPlayer = document.querySelector("#videoPlayer");
+        if (videoPlayer.paused) {
+            isPaused = false;
+            videoPlayer.play();
+            return;
+        }
+        isPaused = !isPaused;
+        if (isPaused) {
+            videoPlayer.playbackRate = 0;
+            videoPlayer.muted = true;
+        } else {
+            videoPlayer.playbackRate = 1;
+            videoPlayer.muted = false;
+        }
+    }
+
+    // Restarts the video when it ends so the video loops
+    document.addEventListener("DOMContentLoaded", async () => {
+        const videoPlayer = document.querySelector("#videoPlayer");
+        videoPlayer.addEventListener("ended", () => {
+            videoPlayer.currentTime = 0;
+            videoPlayer.play();
+        });
+    });
+</script>
+
+</html>
+
+<!--
+    This is the ghost of a script tag which deleted itself
+    but while it was still here it downloaded the video.
+    I bet you could still find the video URL if you knew where
+    to look... :0
+-->
+
+<script>
+    async function fetchBlobInChunks(url, chunkSize) {
+        const headResponse = await fetch(url, { method: "HEAD" });
+        const fileSize = parseInt(headResponse.headers.get("Content-Length"), 10);
+        const outputBuffer = new Uint8Array(fileSize);
+        let position = 0;
+        while (true) {
+            if (position >= fileSize - 1) {
+                break;
+            }
+            let endPosition = position + (chunkSize - 1);
+            if (endPosition >= fileSize) {
+                endPosition = fileSize - 1;
+            }
+            const response = await fetch(url, {
+                headers: {
+                    "Range": `bytes=${position}-${endPosition}`,
+                },
+            });
+            const buffer = await response.arrayBuffer();
+            const bytes = new Uint8Array(buffer);
+            outputBuffer.set(bytes, position);
+            position = endPosition;
+        }
+        return new Blob([outputBuffer], { type: "video/mp4" });
+    }
+    document.addEventListener("DOMContentLoaded", async () => {
+        const videoPlayer = document.querySelector("#videoPlayer");
+        const videoSource = document.querySelector("#videoSource");
+        const videoUrl = "/4-ee50c483-9880-43ab-81fe-2a65d7e3dd22.mp4";
+        const blob = await fetchBlobInChunks(videoUrl, 1000 * 1000);
+        const blobUrl = URL.createObjectURL(blob);
+        videoSource.src = blobUrl;
+        videoPlayer.load();
+        videoPlayer.onloadeddata = () => {
+            URL.revokeObjectURL(blobUrl);
+        };
+    });
+    document.currentScript.remove();
+</script>
