@@ -21,9 +21,29 @@ body {
 }
 
 #videoPlayer {
+    width: 960px;
+    height: 540px;
     background-color: white;
     border: 5px solid black;
     pointer-events: auto;
+}
+
+#homeContainer {
+    padding: 10%;
+    width: 960px;
+    height: 540px;
+    background-color: white;
+    border: 5px solid black;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#homeText {
+    color: black;
+    font-size: 18pt;
+    text-align: center;
 }
 
 nav {

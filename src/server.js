@@ -47,7 +47,6 @@ app.use("/4-ee50c483-9880-43ab-81fe-2a65d7e3dd22.mp4", (req, res, next) => {
             if (rangeSize > maxRequestLength) {
                 return res.status(416).send("Requests which ask for more than 128KB are forbidden. Use request range and content length to ask for only part of the file or die trying.");
             }
-            console.log(`Serving bytes ${start}-${end}`);
             res.writeHead(206, {
                 "Content-Range": `bytes ${start}-${end}/${fileSize}`,
                 "Accept-Ranges": "bytes",
@@ -65,7 +64,9 @@ app.use("/4-ee50c483-9880-43ab-81fe-2a65d7e3dd22.mp4", (req, res, next) => {
 });
 
 app.use("/", express.static("./public_html"));
-
+app.get("/", (req, res) => {
+    res.sendFile("./public_html/index.html");
+});
 app.listen(PORT, () => {
     console.log(`Started server on ${PORT}!`);
 });

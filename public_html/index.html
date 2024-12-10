@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>BlueTube - Flag1</title>
+    <title>BlueTube</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 
@@ -27,9 +27,10 @@
         </div>
     </nav>
 
-    <video id="videoPlayer" preload="auto" onclick="PlayPause()">
-        <source id="videoSource" src="/1-0d0a657a-8349-4431-85e4-b2b94b144771.mp4" type="video/mp4">
-    </video>
+    <div id="homeContainer">
+        <h1 id="homeText">Welcome to BlueTube the internet's latest video streaming craze. A hit website featuring state
+            of the art DRM to protect your videos from those pesky download buttons.</h1>
+    </div>
 </body>
 
 <script>
@@ -37,34 +38,6 @@
     document.addEventListener("DOMContentLoaded", async () => {
         document.addEventListener("contextmenu", function (event) {
             event.preventDefault();
-        });
-    });
-
-    // Plays/pauses the video when you click
-    let isPaused = false;
-    async function PlayPause() {
-        const videoPlayer = document.querySelector("#videoPlayer");
-        if (videoPlayer.paused) {
-            isPaused = false;
-            videoPlayer.play();
-            return;
-        }
-        isPaused = !isPaused;
-        if (isPaused) {
-            videoPlayer.playbackRate = 0;
-            videoPlayer.muted = true;
-        } else {
-            videoPlayer.playbackRate = 1;
-            videoPlayer.muted = false;
-        }
-    }
-
-    // Restarts the video when it ends so the video loops
-    document.addEventListener("DOMContentLoaded", async () => {
-        const videoPlayer = document.querySelector("#videoPlayer");
-        videoPlayer.addEventListener("ended", () => {
-            videoPlayer.currentTime = 0;
-            videoPlayer.play();
         });
     });
 </script>

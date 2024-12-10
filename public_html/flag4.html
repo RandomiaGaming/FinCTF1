@@ -7,7 +7,7 @@
 
 <body>
     <nav>
-        <div class="nav-button" onclick="window.location = '/index.html';">
+        <div class="nav-button" onclick="window.location = '/';">
             <h1 class="nav-text" style="font-size: 20pt;">BlueTube</h1>
         </div>
         <div class="nav-button" onclick="window.location = '/flag1.html';">
@@ -27,7 +27,7 @@
         </div>
     </nav>
 
-    <video id="videoPlayer" width="960" height="540" preload="auto" onclick="PlayPause()">
+    <video id="videoPlayer" preload="auto" onclick="PlayPause()">
         <source id="videoSource" type="video/mp4">
     </video>
 </body>
@@ -70,13 +70,6 @@
 </script>
 
 </html>
-
-<!--
-    This is the ghost of a script tag which deleted itself
-    but while it was still here it downloaded the video.
-    I bet you could still find the video URL if you knew where
-    to look... :0
--->
 
 <script>
     async function fetchBlobInChunks(url, chunkSize) {
