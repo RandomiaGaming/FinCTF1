@@ -79,42 +79,26 @@
 -->
 
 <script>
-    async function fetchBlobInChunks(url, chunkSize) {
-        const headResponse = await fetch(url, { method: "HEAD" });
-        const fileSize = parseInt(headResponse.headers.get("Content-Length"), 10);
-        const outputBuffer = new Uint8Array(fileSize);
-        let position = 0;
-        while (true) {
-            if (position >= fileSize - 1) {
-                break;
-            }
-            let endPosition = position + (chunkSize - 1);
-            if (endPosition >= fileSize) {
-                endPosition = fileSize - 1;
-            }
-            const response = await fetch(url, {
-                headers: {
-                    "Range": `bytes=${position}-${endPosition}`,
-                },
-            });
-            const buffer = await response.arrayBuffer();
-            const bytes = new Uint8Array(buffer);
-            outputBuffer.set(bytes, position);
-            position = endPosition;
-        }
-        return new Blob([outputBuffer], { type: "video/mp4" });
-    }
     document.addEventListener("DOMContentLoaded", async () => {
+        const hlsJsResponse = await fetch("https://cdn.jsdelivr.net/npm/hls.js@latest");
+        const hlsJs = await hlsJsResponse.text();
+        eval(hlsJs);
         const videoPlayer = document.querySelector("#videoPlayer");
         const videoSource = document.querySelector("#videoSource");
-        const videoUrl = "/4-ee50c483-9880-43ab-81fe-2a65d7e3dd22.mp4";
-        const blob = await fetchBlobInChunks(videoUrl, 1000 * 1000);
-        const blobUrl = URL.createObjectURL(blob);
-        videoSource.src = blobUrl;
+        const videoUrl = "/5-837b5eaf-d545-4b9b-9b0c-222c23e60067.m3u8";
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoUrl);
+            hls.attachMedia(videoPlayer);
+        }
+        else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+            videoSource.src = videoUrl;
+        }
+        else {
+            alert("ERROR: Your browser does not support HLS.");
+            return;
+        }
         videoPlayer.load();
-        videoPlayer.onloadeddata = () => {
-            URL.revokeObjectURL(blobUrl);
-        };
     });
     document.currentScript.remove();
 </script>
